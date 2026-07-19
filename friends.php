@@ -16,7 +16,7 @@
             </form>
             <div class="search-result-list">
                 <?php
-                    $result = $_SESSION['key'] ?? '';
+                    $result = $_SESSION['key'] ?? [];
                     foreach($result as $row){
                 ?>
                 <div class="search-result-item">
@@ -41,7 +41,7 @@
                 $friend_img = $pdo->query("SELECT * FROM `users` WHERE `username` = '$you_user'")->fetch();
                 
             ?>
-                <div class="friend-item">
+                <div class="friend-item" onclick="location.href='./friend_page.php?send_user=<?=$friend['send_user']?>&you_user=<?=$friend['you_user']?>&status=<?=$friend['status']?>&username=<?=$you_user?>'">
                     <img src="<?=$friend_img['img']?>" width="90" height="90" class="friend-avatar">
                     <div class="friend-name">
                         <a href="./friend_page.php?send_user=<?=$friend['send_user']?>&you_user=<?=$friend['you_user']?>&status=<?=$friend['status']?>&username=<?=$you_user?>"><?=$you_user?></a>
