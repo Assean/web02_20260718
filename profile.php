@@ -69,7 +69,7 @@
             <!-- 簡介表單 -->
             <form enctype="multipart/form-data" method="post">
                 <div class="profile-bio">
-                    <textarea name="bio" id="bio" cols="30" rows="10" class="profile-bio-input" readonly><?= !empty($user['bio']) ? $user['bio'] : '尚未填寫簡介' ?></textarea>
+                    <textarea name="bio" id="bio" cols="30" rows="10" class="profile-bio-input" readonly><?= !empty($user['bio']) ? $user['bio'] : '尚未填寫自我介紹' ?></textarea>
                 </div>
             </form>
 
