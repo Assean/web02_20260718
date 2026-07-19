@@ -16,19 +16,15 @@
             $you_user = $_GET['you_user'] ?? '';
             $status = $_GET['status'] ?? '';
             $username = $_GET['username'] ?? '';
-            
-            // 撈取目標使用者資料
             $user = $pdo->query("SELECT * FROM `users` WHERE `username` = '$username'")->fetch();
-            
-            // 取得當前登入使用者（確保 session 存在）
             $current_user = $_SESSION['user'] ?? '';
         ?>
 
         <div class="profile-header">
-            <!-- 依需求已移除所有 htmlspecialchars，並使用 ?? 防止變數為空時拋出 Notice 錯誤 -->
             <div class="profile-username"><?=$user['username'] ?? ''?></div>
             <img src="<?=$user['img'] ?? ''?>" alt="" class="profile-avatar">
-            <div class="profile-bio"><?=$user['bio'] ?? ''?></div>
+            
+            <div class="profile-bio"><?=(!empty($user['bio'])) ? $user['bio'] : '尚未填寫自我介紹'?></div>
         </div>
 
         <div class="profile-content">
