@@ -8,7 +8,7 @@
 <body>
     <div id="admin">
         <?php include_once "inc/header.php"; ?>
-        <a class="border p-2 m-1" href="./admin">基本設定</a>
+        <a class="border p-2 m-1" href="./admin.php">基本設定</a>
         <a class="border p-2 m-1" href="./admin_result.php">問卷回應</a>
         <a class="border p-2 m-1" href="./admin_imgtable.php">統計圖表</a>
         <a class="border p-2 m-1" href="./form.php">瀏覽表單</a>

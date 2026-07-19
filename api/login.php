@@ -1,30 +1,26 @@
 <?php
+    // 必須在檔案最上方啟用 Session
+    session_start(); 
     include_once "db.php";
+
     $username = $_POST['username'];
-    // $email = $_POST['email'];
     $password = $_POST['password'];
-    // $password_confirm = $_POST['password_confirm'];
-    $check_user = $pdo->query("SELECT * FROM `users` WHERE `username` = '$username'")->fetch();
-    $check_pass = $pdo->query("SELECT * FROM `users` WHERE `password` = '$password'")->fetch();
-    
-    if($check_user > 1){
-        if($check_pass > 1){
-            $_SESSION['user'] = $username;
-            echo "<script>
-            location.href='../profile.php';
-            </script>";
-            exit;   
-        }else{
-            echo "<script>
-            alert('帳號密碼錯誤');
-            location.href='../login.php';
-            </script>";
-            exit;
-        }
+
+    // 將帳號與密碼放在同一個 SQL 中查詢，效率更好也更符合登入邏輯
+    $user = $pdo->query("SELECT * FROM `users` WHERE `username` = '$username' AND `password` = '$password'")->fetch();
+
+    // 直接判斷是否成功取得資料 (若有資料，$user 會是陣列，等同於 true)
+    if($user){
+        $_SESSION['user'] = $username;
+        echo "<script>
+        location.href='../profile.php';
+        </script>";
+        exit;   
     }else{
         echo "<script>
-            alert('帳號密碼錯誤');
-            location.href='../login.php';
-            </script>";
-            exit;
+        alert('帳號密碼錯誤');
+        location.href='../login.php';
+        </script>";
+        exit;
     }
+?>
