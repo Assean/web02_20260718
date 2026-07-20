@@ -25,8 +25,8 @@
                  <div class="mb-3">
                      <label for="" class="form-label fw-bold">是否啟用表單</label>
                      <select name="tof" id="" class="form-select">
-                         <option value="是">是</option>
-                         <option value="否">否</option>
+                         <option value="true">是</option>
+                         <option value="false">否</option>
                      </select>
                  </div>
                  

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FunTech</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div id="profile-page" class="container my-4">
@@ -15,8 +14,9 @@
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 // 1. 處理頭像上傳
                 if(isset($_FILES['header']) && $_FILES['header']['tmp_name']){
-                    $max_size = 2 * 1024 * 1024; 
-                    if($_FILES['header']['size'] > $max_size || $_FILES['header']['error'] === UPLOAD_ERR_INI_SIZE) {
+                    // 修改此處：限制大小改為 1MB
+                    $max_size = 1 * 1024 * 1024; 
+                    if($_FILES['header']['size'] > $max_size OR $_FILES['header']['error'] === UPLOAD_ERR_INI_SIZE) {
                         echo "<script>
                             alert('頭像上傳失敗');
                             location.href='./profile.php';
@@ -54,7 +54,7 @@
                 if(isset($_POST['bio'])){
                     $bio = $_POST['bio'];
                     
-                    // 補上後端規範：不可為空且不得超過 300 字元
+                    // 後端規範：不可為空且不得超過 300 字元
                     if($bio !== '' && mb_strlen($bio, 'UTF-8') <= 300){
                         $pdo->exec("UPDATE `users` SET `bio` = '$bio' WHERE `users`.`username` = '{$_SESSION['user']}'");
                         echo "<script>location.href='./profile.php'</script>";
@@ -81,7 +81,6 @@
                 <div class="profile-username h4 mb-2 text-info fw-bold"><?=$_SESSION['user']?></div>
                 <form method="post" class="m-0">
                     <div class="profile-bio">
-                        <!-- 補上前端 maxlength="300" 限制輸入長度 -->
                         <textarea name="bio" id="bio" rows="2" maxlength="300" class="profile-bio-input form-control form-control-sm" readonly placeholder="點擊填寫自我介紹..."><?= !empty($user['bio']) ? $user['bio'] : '尚未填寫自我介紹' ?></textarea>
                     </div>
                 </form>
@@ -136,4 +135,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
