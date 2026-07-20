@@ -53,9 +53,7 @@
                 // 2. 處理文字簡介更新
                 if(isset($_POST['bio'])){
                     $bio = $_POST['bio'];
-                    
-                    // 後端規範：不可為空且不得超過 300 字元
-                    if($bio !== '' && mb_strlen($bio, 'UTF-8') <= 300){
+                    if($bio !== '' AND mb_strlen($bio, 'UTF-8') <= 300){
                         $pdo->exec("UPDATE `users` SET `bio` = '$bio' WHERE `users`.`username` = '{$_SESSION['user']}'");
                         echo "<script>location.href='./profile.php'</script>";
                         exit;
