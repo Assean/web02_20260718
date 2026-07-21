@@ -12,28 +12,35 @@
             $user = $pdo->query("SELECT * FROM `users` WHERE `username` = '{$_SESSION['user']}'")->fetch();
 
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
-                if($_FILES['header'] && $_FILES['header']['tmp_name']){
+                if($_FILES['header'] OR $_FILES['header']['tmp_name']){
                     $max = 1*1024*1024;
-                    if($_FILES['header']['size'] > $max OR $_FILES['header']['error']){
+                    if($_FILES['header']['size'] > $max OR $_FILES['header']['error'] === UPLOAD_ERR_INI_SIZE){
                         echo "<script>alert('頭像上傳失敗');location.href='./profile.php'</script>";
                         exit;
                     }
-                    $ext = strtolower(pathinfo($_FILES['header']['name']),PATHINFO_EXTENSION);
+                    $ext = strtolower(pathinfo($_FILES['header']['name'],PATHINFO_EXTENSION));
                     if(!in_array($ext,['jpeg','jpg','png'])){
                         echo "<script>alert('頭像上傳失敗');location.href='./profile.php'</script>";
                         exit;
                     }
-                    $filename = $_SESSION['user'] . "img" . "." . $ext;
+                    $filename = $_SESSION['user'] . "_img" . "." . $ext;
                     $ok = move_uploaded_file($_FILES['header']['tmp_name'],"./assets/img/profile/$filename");
                     if($ok){
-                        $pdo->exec("UPDATE `users` SET `img` = './assets/img/profile/$filename' WHERE `users`.`username` = '{$_SESSION['user']}';");
+                        $pdo->exec("UPDATE `users` SET `img` = 'assets/img/profile/$filename' WHERE `users`.`username` = '{$_SESSION['user']}'");
                         echo "<script>location.href='./profile.php'</script>";
                         exit;
                     }
                 }
                 if(isset($_POST['bio'])){
                     $bio = $_POST['bio'];
-                    
+                    if(!empty($bio) > 300){
+                        // $pdo->exec("UPDATE `users` SET `img` = 'assets/img/profile/$filename' WHERE `users`.`username` = '{$_SESSION['user']}'");
+                        echo "<script>alert('超過300字元222');location.href='./profile.php'</script>";
+                        exit;
+                    }
+                    $pdo->exec("UPDATE `users` SET `bio` = '$bio' WHERE `users`.`username` = '{$_SESSION['user']}'");
+                    echo "<script>location.href='./profile.php'</script>";
+                    exit;
                 }
             }
         ?>
