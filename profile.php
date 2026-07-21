@@ -12,45 +12,24 @@
             $user = $pdo->query("SELECT * FROM `users` WHERE `username` = '{$_SESSION['user']}'")->fetch();
 
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
-                // 1. 處理頭像上傳
-                if(isset($_FILES['header']) && $_FILES['header']['tmp_name']){
-                    // 修改此處：限制大小改為 1MB
-                    $max_size = 1 * 1024 * 1024; 
-                    if($_FILES['header']['size'] > $max_size OR $_FILES['header']['error'] === UPLOAD_ERR_INI_SIZE) {
-                        echo "<script>
-                            alert('頭像上傳失敗');
-                            location.href='./profile.php';
-                            </script>";
+                if($_FILES['header'] && $_FILES['header']['tmp_name']){
+                    $max = 1*1024*1024;
+                    if($_FILES['header']['size'] > $max OR $_FILES['header']['error'] === UPLOAD_ERR_INI_SIZE){
+                        echo "<script>alert('頭像上傳失敗');location.href='./profile.php'</script>";
                         exit;
                     }
-
-                    $uploaded_ext = strtolower(pathinfo($_FILES['header']['name'], PATHINFO_EXTENSION));
-                    
-                    if(!in_array($uploaded_ext, ['jpg', 'jpeg', 'png'])) {
-                        echo "<script>
-                            alert('頭像上傳失敗');
-                            location.href='./profile.php';
-                            </script>";
+                    $ext = strtolower(pathinfo($_FILES['header']['name'],PATHINFO_EXTENSION));
+                    if(!in_array($ext,['jpeg','jpg','png'])){
+                        echo "<script>alert('頭像上傳失敗');location.href='./profile.php'</script>";
                         exit;
                     }
-
-                    $filename = $_SESSION['user'] . "_1." . $uploaded_ext;
-                    $ok = move_uploaded_file($_FILES['header']['tmp_name'], "./assets/img/profile/$filename");
-                    
+                    $filename = $_SESSION['user'] . "_1." . $ext;
+                    $ok = move_uploaded_file($_FILES['header']['tmp_name'],"./assets/img/profile/$filename");
                     if($ok){
                         $pdo->exec("UPDATE `users` SET `img` = 'assets/img/profile/$filename' WHERE `users`.`username` = '{$_SESSION['user']}'");
                         echo "<script>location.href='./profile.php'</script>";
-                        exit;
-                    }else{
-                        echo "<script>
-                            alert('頭像上傳失敗');
-                            location.href='./profile.php';
-                            </script>";
-                        exit;
                     }
                 }
-
-                // 2. 處理文字簡介更新
                 if(isset($_POST['bio'])){
                     $bio = $_POST['bio'];
                     if($bio !== '' AND mb_strlen($bio, 'UTF-8') <= 300){
@@ -79,7 +58,7 @@
                 <div class="profile-username h4 mb-2 text-info fw-bold"><?=$_SESSION['user']?></div>
                 <form method="post" class="m-0">
                     <div class="profile-bio">
-                        <textarea name="bio" id="bio" rows="2" maxlength="300" class="profile-bio-input form-control form-control-sm" readonly placeholder="點擊填寫自我介紹..."><?= !empty($user['bio']) ? $user['bio'] : '尚未填寫自我介紹' ?></textarea>
+                        <textarea name="bio" id="bio" rows="2" maxlength="300" class="profile-bio-input form-control form-control-sm" readonly placeholder="尚未填寫自我介紹"><?= !empty($user['bio']) ? $user['bio'] : '尚未填寫自我介紹' ?></textarea>
                     </div>
                 </form>
             </div>
@@ -116,20 +95,13 @@
 
     <script>
         const $bio = $('#bio');
-        $bio.on('click', function() {
-            $bio.prop('readonly', false);
-            if ($bio.val() === '尚未填寫自我介紹') {
-                $bio.val('');
-            }
-        });
-
-        $bio.on('keydown', (e) => {
-            if(e.key === 'Enter') {
-                e.preventDefault();
-                if($bio.val().trim() !== '') {
-                    $bio.closest('form').submit();
-                }
-            }
+        if($bio.val() === '尚未填寫自我介紹'){
+            $bio.val('');
+        }
+        $bio.on('click',()=>$bio.prop('readonly',false));
+        $bio.on('keydown',(e)=>{
+            if(e.key === 'Enter') e.preventDefault();
+            e.key === 'Enter' ? $bio.closest('form').submit() : null;
         });
     </script>
 </body>

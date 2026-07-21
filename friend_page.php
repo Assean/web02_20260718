@@ -82,7 +82,7 @@
                                         <?=$article['title']?>
                                     </h4>
                                     <small class="text-muted">
-                                        📅 發布日期：<time class="article-date"><?=$article['date']?></time>
+                                        發布日期：<time class="article-date"><?=$article['date']?></time>
                                     </small>
                                 </div>
                                 <div class="mt-3 mt-md-0">
